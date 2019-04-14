@@ -12,7 +12,7 @@ from homeassistant.components.light import Light, PLATFORM_SCHEMA
 from homeassistant.const import CONF_NAME, CONF_DEVICES
 import homeassistant.helpers.config_validation as cv
 
-DOMAIN = "my_home"
+DOMAIN = "reopenwebnet"
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_DEVICES): vol.All(cv.ensure_list,[

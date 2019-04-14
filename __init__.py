@@ -5,7 +5,7 @@ from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT
 
 import homeassistant.helpers.config_validation as cv
 
-DOMAIN = "my_home"
+DOMAIN = "reopenwebnet"
 REQUIREMENTS = []
 
 CONFIG_SCHEMA = vol.Schema({
@@ -17,7 +17,7 @@ CONFIG_SCHEMA = vol.Schema({
 }, extra=vol.ALLOW_EXTRA)
 
 def setup(hass,config):
-    from openwebnet import CommandClient
+    from reopenwebnet import CommandClient
 
     host = config[DOMAIN].get(CONF_HOST)
     port = config[DOMAIN].get(CONF_PORT)

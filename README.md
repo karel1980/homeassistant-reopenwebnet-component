@@ -1,24 +1,24 @@
 # Description
 
 Homeassistant component for connecting to an openwebnet gateway.
+Communication with the gateway happens via the reopenwebnet client.
 
 Usage:
 
 - Install homeassistant
-- Install https://github.com/karel1980/openwebnet
-- Copy the files in this repository to `<PATH_TO_HASS_CONFIG>/customer_components/my_home`. Symlinks also work.
+- Copy the files in this repository to `<PATH_TO_HASS_CONFIG>/customer_components/reopenwebnet`.
 - Add example configuration to `<PATH_TO_HASS_CONFIG>/configuration.yml`
 
 # Example configuration
 
 ```yaml
-my_home:
+reopenwebnet:
   host: '192.168.1.5'
   port: 20000
   password: '123456'
 
 light:
-  - platform: my_home
+  - platform: reopenwebnet
     scan_interval: 5
     devices:
       - name: kitchen_light
