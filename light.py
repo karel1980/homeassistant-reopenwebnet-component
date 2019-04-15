@@ -54,7 +54,7 @@ class MyHomeLight(Light):
     def turn_on(self, **kwargs):
         brightness = kwargs.get('brightness', None)
         if brightness is None:
-            self._gate.light_command(self._address, self._brightness)
+            self._gate.light_command(self._address, 1)
             self._state = True
         elif brightness == 0:
             self._gate.light_off(self._address)

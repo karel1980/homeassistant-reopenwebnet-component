@@ -6,7 +6,7 @@ from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT
 import homeassistant.helpers.config_validation as cv
 
 DOMAIN = "reopenwebnet"
-REQUIREMENTS = []
+REQUIREMENTS = ['reopenwebnet==1.4.1']
 
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
