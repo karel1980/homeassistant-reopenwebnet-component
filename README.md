@@ -6,7 +6,7 @@ Communication with the gateway happens via the reopenwebnet client.
 Usage:
 
 - Install homeassistant
-- Copy the files in this repository to `<PATH_TO_HASS_CONFIG>/customer_components/reopenwebnet`.
+- Copy the files in this repository to `<PATH_TO_HASS_CONFIG>/customer_components/hass_reopenwebnet`.
 - Add example configuration to `<PATH_TO_HASS_CONFIG>/configuration.yml`
 
 # Example configuration

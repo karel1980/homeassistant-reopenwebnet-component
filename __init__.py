@@ -2,6 +2,7 @@
 import voluptuous as vol
 
 from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT
+from reopenwebnet import CommandClient
 
 import homeassistant.helpers.config_validation as cv
 
@@ -17,11 +18,8 @@ CONFIG_SCHEMA = vol.Schema({
 }, extra=vol.ALLOW_EXTRA)
 
 def setup(hass,config):
-    from reopenwebnet import CommandClient
-
     host = config[DOMAIN].get(CONF_HOST)
     port = config[DOMAIN].get(CONF_PORT)
     password = config[DOMAIN].get(CONF_PASSWORD)
     hass.data[DOMAIN] = CommandClient(host,port,password)
-
     return True

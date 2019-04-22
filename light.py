@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Support for My Home Platform TEST light71
-
-"""
 import voluptuous as vol
 import asyncio
 
