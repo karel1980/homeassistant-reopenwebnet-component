@@ -47,31 +47,31 @@ class MyHomeLight(Light):
     def turn_on(self, **kwargs):
         brightness = kwargs.get('brightness', None)
         if brightness is None:
-            self._gate.light_command(self._address, 1)
+            self._gate.normal_request(1, self._address, 1)
             self._state = True
         elif brightness == 0:
-            self._gate.light_off(self._address)
+            self._gate.normal_request(1, self._address, 0)
             self._state = False
             self._brightness = 0
         elif brightness <= 2:
             self._state = True
             self._brightness = 2
-            self._gate.light_command(self._address, '2')
+            self._gate.normal_request(1, self._address, '2')
         elif brightness <= 10:
             self._state = True
             self._brightness = brightness 
-            self._gate.light_command(self._address, str(brightness))
+            self._gate.normal_request(1, self._address, str(brightness))
         else:
             self._state = True
             self._brightness = 10
-            self._gate.light_command(self._address, str(brightness))
+            self._gate.normal_request(1, self._address, str(brightness))
 
     def turn_off(self, **kwargs):
-        self._gate.light_off(self._address)
+        self._gate.normal_request(1, self._address, 0)
         self._state = False
 
     def update(self):
-        state = self._gate.light_status(self._address)
+        state = self._gate.status_request(1, self._address)
         if state is None:
             self._state = False
         if state == '0':
