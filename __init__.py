@@ -9,7 +9,6 @@ from threading import Lock
 import homeassistant.helpers.config_validation as cv
 
 DOMAIN = "hass_reopenwebnet"
-REQUIREMENTS = ['reopenwebnet==1.4.2']
 
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
