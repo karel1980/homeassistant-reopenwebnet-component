@@ -18,11 +18,11 @@ CONFIG_SCHEMA = vol.Schema({
     })
 }, extra=vol.ALLOW_EXTRA)
 
-def setup(hass,config):
+def setup(hass, config):
     host = config[DOMAIN].get(CONF_HOST)
     port = config[DOMAIN].get(CONF_PORT)
     password = config[DOMAIN].get(CONF_PASSWORD)
-    hass.data[DOMAIN] = Client(host,port,password)
+    hass.data[DOMAIN] = Client(host, port, password)
     return True
 
 class Client():
@@ -30,14 +30,10 @@ class Client():
         self.host = host
         self.port = port
         self.password = password
-        self.lock = Lock()
+        self.client = CommandClient(self.host, self.port, self.password)
 
     def normal_request(self, who, where, what):
-        with self.lock:
-            c = CommandClient(self.host,self.port,self.password)
-            c.normal_request(1, where, what)
+        self.client.normal_request(1, where, what)
         
     def status_request(self, who, where):
-        with self.lock:
-            c = CommandClient(self.host,self.port,self.password)
-            return c.request_state(1, where) 
+        return self.client.request_state(who, where) 
