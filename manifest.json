@@ -4,5 +4,5 @@
   "documentation": "https://github.com/karel1980/homeassistant-reopenwebnet-component",
   "dependencies": [],
   "codeowners": [],
-  "requirements": ["reopenwebnet==1.4.3"]
+  "requirements": ["reopenwebnet==1.4.4"]
 }

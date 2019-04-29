@@ -28,7 +28,7 @@ class MyHomeLight(Light):
         self._name = light[CONF_NAME]
         self._address = light['address']
         self._state = False
-        self._brightness = 0
+        self._brightness = 5
 
     @asyncio.coroutine
     def async_added_toHass(self):
@@ -54,5 +54,8 @@ class MyHomeLight(Light):
 
     def update(self):
         state = self._gate.status_request(1, self._address)
-        self._state = state == '1'
+
+        if state is not None:
+          self._state = state != '0'
+
         self.schedule_update_ha_state()
