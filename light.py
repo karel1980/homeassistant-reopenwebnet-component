@@ -6,6 +6,8 @@ from homeassistant.components.light import Light, PLATFORM_SCHEMA
 from homeassistant.const import CONF_NAME, CONF_DEVICES
 import homeassistant.helpers.config_validation as cv
 
+from reopenwebnet import messages
+
 _LOGGER = logging.getLogger(__name__)
 DOMAIN = "hass_reopenwebnet"
 
@@ -14,6 +16,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
         {
             vol.Required(CONF_NAME): cv.string,
             vol.Required('address'): cv.string,
+            vol.Optional('debug'): cv.boolean,
         }
     ])
 })
@@ -28,8 +31,34 @@ class MyHomeLight(Light):
         self._gate = gate
         self._name = light[CONF_NAME]
         self._address = light['address']
+        self._debug = light.get('debug', False)
+
         self._state = False
         self._brightness = 0
+
+        self.register_listener()
+
+    def debug_print(self, *args, **kwargs):
+        if self._debug:
+            print(*args, **kwargs)
+
+    def register_listener(self):
+        def on_change(msg):
+            self.debug_print("LIGHT received update", self._address, msg)
+            self.process_msg(msg)
+            self.schedule_update_ha_state()
+
+        self._gate.register_listener('1', self._address, on_change)
+
+    def process_msg(self, msg):
+        if msg.what == '0':
+            self._state = False 
+        else:
+            self._state = 1
+            self._brightness = 255
+
+        #TODO: handle 2-9 values
+        #TODO: meaning of 10?
 
     @asyncio.coroutine
     def async_added_toHass(self):
@@ -37,70 +66,23 @@ class MyHomeLight(Light):
 
     @property
     def name(self):
-        """ Return name of this light. """
         return self._name
-
-    @property
-    def brightness(self):
-        """ Return brightness of this light. """
-        return self._name
-
-    @property
-    def is_on(self):
-        return self._state
 
     @property
     def brightness(self):
         return self._brightness
 
-    def turn_on(self, **kwargs):
-        brightness = kwargs.get('brightness', 255)
-        gwstate = brightness_to_gwstate(brightness)
-        self._gate.normal_request(1, self._address, gwstate)
-        self._state = True
-        self._brightness = brightness
+    @property
+    def is_on(self):
+        return self._state
 
-    def turn_off(self, **kwargs):
-        self._gate.normal_request(1, self._address, 0)
-        self._state = False
-        self._brightness = 0
+    async def turn_on(self, **kwargs):
+        await self._gate.cmd(messages.NormalMessage('1', '1', self._address))
+
+    async def turn_off(self, **kwargs):
+        await self._gate.cmd(messages.NormalMessage('1', '0', self._address))
 
     def update(self):
-        gwstate = self._gate.status_request(1, self._address)
-
-        if gwstate is not None:
-            self._state = gwstate != '0'
-            old_gwstate = brightness_to_gwstate(self._brightness)
-            if old_gwstate != gwstate:
-                self._brightness = state_to_brightness(gwstate)
-
-        self.schedule_update_ha_state()
-
-def brightness_to_gwstate(brightness):
-    """ Returns openwebnet state corresponding to given brightness. Brightness 0 returns state 0, brightness 1 to 255 returns states from 2 to 10 """
-    if brightness <= 0:
-        return '0'
-
-    if brightness > 255:
-        return '10'
-
-    return str(int(((brightness - 1) * 8 / 254) + 2))
-
-def state_to_brightness(gwstate):
-    """ Map openwebnet state to a brightness level
-        Rules:
-          - 0 => 0
-          - 1, 10 => 255
-          - 2-9 => 1-254
-    """
-
-    gwstate = int(gwstate)
-    if gwstate <= 0:
-        return 0
-    elif gwstate == 1 or gwstate >= 10:
-        return 255
-    else:
-        width = 253.0 / 8
-        center = int((0.5 + gwstate - 2) * width)
-        return center
+        # nothing needed to do, state should always be in sync
+        pass
 
